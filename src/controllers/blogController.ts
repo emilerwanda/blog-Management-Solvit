@@ -6,6 +6,8 @@ import { generateSlug } from "../utils/helper";
 import { ObjectId } from "mongodb";
 import { AuthRequest } from "../middleware/authMiddleware";
 import { UserModel } from "../models/userModel";
+
+
 const getAllBlogs = async (req: Request, res: Response) => {
     try {
         const blogs = await blogModel.find().populate('author');
@@ -24,6 +26,8 @@ const getAllBlogs = async (req: Request, res: Response) => {
 interface IRequestBlog extends AuthRequest {
     body: interfaceAddBlog
 }
+
+
 const createBlog = async (req: IRequestBlog, res: Response) => {
     try {
         const _id = req?.user?._id as string
@@ -59,6 +63,8 @@ interface GetBlogByIdRequestInterface extends Request {
         id: string
     }
 }
+
+
 const getABlog = async (req: GetBlogByIdRequestInterface, res: Response) => {
     try {
         const { id } = req.params
@@ -90,4 +96,59 @@ const getABlog = async (req: GetBlogByIdRequestInterface, res: Response) => {
     }
 }
 
-export { getAllBlogs, createBlog, getABlog }
+// const likeBlog = async (req: AuthRequest, res: Response) => {
+//     try {
+//         const blogId = req.params.id
+//         const userId = req.user?._id as string
+
+//         const blog = await blogModel.findById(blogId);
+//         if (!blog) {
+//             return ResponseService({
+//                 res,
+//                 status: 404,
+//                 success: false,
+//                 message: "Blog not found"
+//             });
+//         }
+
+//         const alreadyLiked = blog.likedBy.includes(userId);
+
+//         if (alreadyLiked) {
+//             return ResponseService({
+//                 res,
+//                 status: 400,
+//                 success: false,
+//                 message: "You already liked this blog"
+//             });
+//         }
+
+//         blog.likes +1;
+//         if (userId) {
+//             blog.likedBy.push(userId);
+//         }
+//         await blog.save();
+
+//         ResponseService({
+//             res,
+//             status: 200,
+//             success: true,
+//             message: "Blog liked successfully",
+//             data: {
+//                 likes: blog.likes
+//             }
+//         });
+
+//     } catch (error) {
+//         const { message, stack } = error as Error;
+//         ResponseService({
+//             res,
+//             data: stack,
+//             message,
+//             status: 500,
+//             success: false
+//         });
+//     }
+// }
+
+
+export { getAllBlogs, createBlog, getABlog, /*likeBlog*/ }

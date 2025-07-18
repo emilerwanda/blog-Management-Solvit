@@ -1,3 +1,5 @@
+import mongoose from "mongoose"
+
 export interface BlogInterface{
     _id: string
     slug:string
@@ -9,6 +11,9 @@ export interface BlogInterface{
     createdAt: string
     updatedAt: string
     deletedAt: null|string |undefined
+    likes: number;
+    likedBy: mongoose.Types.ObjectId[];
+
 }
 export interface interfaceAddBlog extends Omit<BlogInterface,'id'>{}
 export interface GetAllBlogs{

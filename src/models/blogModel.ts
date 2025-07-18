@@ -10,6 +10,9 @@ interface BlogSchemaInterface{
     createdAt: NativeDate
     updatedAt: NativeDate
     deletedAt: null | string | undefined
+    likes: {  type: Number,    default: 0,},
+    likedBy: [{   type: typeof mongoose.Schema.Types.ObjectId, ref: string}]
+
 }
 const blogModelSchema = new Schema<BlogSchemaInterface> ({
     title: String,
@@ -27,6 +30,10 @@ const blogModelSchema = new Schema<BlogSchemaInterface> ({
         default: new Date(),
         unique:true
     },
-    deletedAt:Date
+    deletedAt:Date,
+    likes: {
+        type: Number,
+        default: 0
+    }
 })
 export const blogModel =  model<BlogSchemaInterface>("blogs", blogModelSchema)
