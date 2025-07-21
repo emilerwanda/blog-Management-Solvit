@@ -1,39 +1,54 @@
-import mongoose, {model,Schema} from "mongoose"
+import mongoose, { Schema, model } from "mongoose";
 
-interface BlogSchemaInterface{
-    slug: string
-    title: string
-    author: { type: typeof mongoose.Types.ObjectId; ref: string; }
-    content: string
-    isPublished: boolean
-    description: string
-    createdAt: NativeDate
-    updatedAt: NativeDate
-    deletedAt: null | string | undefined
-    likes: {  type: Number,    default: 0,},
-    likedBy: [{   type: typeof mongoose.Schema.Types.ObjectId, ref: string}]
-
+interface BlogSchemaInterface {
+  slug: string;
+  title: string;
+  author: mongoose.Types.ObjectId;
+  content: string;
+  isPublished: boolean;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null | undefined;
+  likes: number;
+  likedBy: mongoose.Types.ObjectId[];
 }
-const blogModelSchema = new Schema<BlogSchemaInterface> ({
-    title: String,
-    slug: String,
-    description: String,
-    content: String,
-    author: {
-        type:mongoose.Types.ObjectId,
-        ref: 'Users'
+
+const blogSchema = new Schema<BlogSchemaInterface>({
+  title: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
+  description: { type: String, required: true },
+  content: { type: String, required: true },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users",
+    required: true,
+  },
+  isPublished: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+  deletedAt: { type: Date, default: null },
+  likes: { type: Number, default: 0 },
+  likedBy: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
     },
-    isPublished: Boolean,
-    createdAt: Date,
-    updatedAt: {
-        type: Date,
-        default: new Date(),
-        unique:true
-    },
-    deletedAt:Date,
-    likes: {
-        type: Number,
-        default: 0
-    }
-})
-export const blogModel =  model<BlogSchemaInterface>("blogs", blogModelSchema)
+  ],
+});
+
+
+blogSchema.virtual("comments", {
+  ref: "Comment",       
+  localField: "_id",      
+  foreignField: "blog",   
+});
+
+
+blogSchema.set("toObject", { virtuals: true });
+blogSchema.set("toJSON", { virtuals: true });
+
+export const blogModel = model<BlogSchemaInterface>("Blog", blogSchema);

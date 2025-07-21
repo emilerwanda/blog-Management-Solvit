@@ -1,26 +1,10 @@
 import mongoose, {model,Schema} from "mongoose"
 
-export interface Liked extends Document {
-  user: mongoose.Types.ObjectId;
-  blog: mongoose.Types.ObjectId;
-  createdAt: Date;
-}
-const commentSchema = new Schema({
-  text: String,
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    validate: {
-      validator: async function (userId: string) {
-        const user = await mongoose.model('User').findById(userId);
-        return user?.role === 'normal user';
-      },
-    },
-  },
-  blog: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Blog',
-  },
-}, { timestamps: true });
+const commentSchema = new mongoose.Schema({
+  content: { type: String, required: true },
+  blog: { type: mongoose.Schema.Types.ObjectId, ref: 'Blog', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  createdAt: { type: Date, default: Date.now }
+});
 
-export const Comment = model('Comment', commentSchema);
+export const CommentModel = mongoose.model('Comment', commentSchema);

@@ -5,12 +5,13 @@ import { AddBlogSchema, IdValidationSchema } from '../schemas/blogSchema'
 import { AuthMiddleware } from "../middleware/authMiddleware";
 import { createComment, getCommentsByBlog } from '../controllers/CommentController';
 import { commentSValidatechema } from "../schemas/commentSchema";
-// import { likeBlog } from "../controllers/blogController";
+import { isAdmin } from "../middleware/authMiddleware";
+import { likeBlog } from "../controllers/blogController";
 
 const blogRouter = Router();
 blogRouter.get('/blogs', getAllBlogs)
 
-blogRouter.post('/blogs', AuthMiddleware, ValidationMiddleware({ 
+blogRouter.post('/blogs', AuthMiddleware, isAdmin, ValidationMiddleware({ 
     type: 'body', schema: AddBlogSchema 
 }), createBlog)
 
@@ -25,6 +26,6 @@ blogRouter.post('/blogs/comments/:blogId', ValidationMiddleware({
 
 blogRouter.get('/blogs/comments/:blogId', getCommentsByBlog); 
 
-blogRouter.post('/blogs/like/:id', AuthMiddleware, /*likeBlog*/);     
+blogRouter.post('/blogs/like/:id', AuthMiddleware, likeBlog);     
 
 export { blogRouter }

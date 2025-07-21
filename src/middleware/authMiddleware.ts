@@ -56,10 +56,10 @@ export const AuthMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
 };
 
 export const isAdmin = (req: AuthRequest, res: Response, next: NextFunction) => {
-  if (req.user?.role == "admin") {
+  if (req.user?.role !== "admin") {
     return ResponseService({
       res,
-      message: "Admins not permitted.",
+      message: "Admins only post a blog.",
       status: 403,
       success: false,
     });
