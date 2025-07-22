@@ -66,3 +66,31 @@ export const isAdmin = (req: AuthRequest, res: Response, next: NextFunction) => 
   }
   next();
 };
+
+export const checkRole = (allowedRoles: string[]) => {
+    return (req: AuthRequest, res: Response, next: NextFunction) => {
+        try {
+            const user = req.user;
+
+            if (!user || !user.role || !allowedRoles.includes(user.role)) {
+                return ResponseService({
+                    data: null,
+                    status: 403,
+                    success: false,
+                    message: "You do not have permission to perform this action",
+                    res
+                });
+            }
+            
+            next();
+        } catch (error) {
+            const { message, stack } = error as Error;
+            ResponseService({
+                data: { message, stack },
+                status: 500,
+                success: false,
+                res
+            });
+        }
+    };
+};

@@ -17,7 +17,8 @@ export async function run() {
             }
         });
        client.then(re => {
-           re.connection        
+           re.connection,
+            console.log('connected success to moongose database')        
         }).catch(ca => {
            console.log(ca)
         })

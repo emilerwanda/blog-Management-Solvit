@@ -12,6 +12,7 @@ interface BlogSchemaInterface {
   deletedAt: Date | null | undefined;
   likes: number;
   likedBy: mongoose.Types.ObjectId[];
+  blog_image_url:String,
 }
 
 const blogSchema = new Schema<BlogSchemaInterface>({
@@ -19,6 +20,7 @@ const blogSchema = new Schema<BlogSchemaInterface>({
   slug: { type: String, required: true, unique: true },
   description: { type: String, required: true },
   content: { type: String, required: true },
+
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
@@ -38,6 +40,7 @@ const blogSchema = new Schema<BlogSchemaInterface>({
       ref: "Users",
     },
   ],
+  blog_image_url:String,
 });
 
 

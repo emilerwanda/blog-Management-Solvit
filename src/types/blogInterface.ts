@@ -6,6 +6,7 @@ export interface BlogInterface{
     title: string
     author: string
     content:string
+    blog_image_url:string
     isPublished: boolean
     description: string
     createdAt: string

@@ -10,5 +10,5 @@ app.use(express.json())
 const port = parseInt(process.env.PORT as string) || 5500
 app.use(routers)
 app.listen(port, () => {
-    console.log("Our server is running 🔥🔥🔥🔥🔥🔥 ")
+    console.log(`Our server is running, on port: localhost//${port}`)
 })
