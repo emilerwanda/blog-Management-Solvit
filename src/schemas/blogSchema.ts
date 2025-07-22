@@ -9,3 +9,7 @@ export const AddBlogSchema = joi.object({
 export const IdValidationSchema = joi.object({
     id:joi.string().min(24)
 })
+
+export const commentSValidatechema = joi.object({
+  content: joi.string().required()
+})

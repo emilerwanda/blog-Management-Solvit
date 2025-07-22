@@ -1,10 +1,9 @@
 import { Router } from "express";
 import { getAllBlogs, createBlog, getABlog, likeBlog } from '../controllers/blogController'
 import { ValidationMiddleware } from "../middleware/validationMiddleware";
-import { AddBlogSchema, IdValidationSchema } from '../schemas/blogSchema'
+import { AddBlogSchema, IdValidationSchema, commentSValidatechema } from '../schemas/blogSchema'
 import { AuthMiddleware, isAdmin } from "../middleware/authMiddleware";
 import { createComment, getCommentsByBlog } from '../controllers/CommentController';
-import { commentSValidatechema } from "../schemas/commentSchema";
 import { storage } from "../utils/upload"
 import multer from "multer";
 

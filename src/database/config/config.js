@@ -8,20 +8,18 @@ const getPrefix = () => {
   return env
 }
 
-const db_PostGre_Config = () => {
+const databaseConfig = () => {
   const env = getPrefix();
   console.log(process.env[`${env}_USERNAME`])
-  
-
   return {
     username: process.env[`${env}_USERNAME`] || '',
     database: process.env[`${env}_DATABASE`] || '',
     password: process.env[`${env}_PASSWORD`] || '',
     host: process.env[`${env}_HOST`] || '',
     port: process.env[`${env}_PORT`] || 5432,
-    dialect: 'postgres' 
-  }
+    dialect: 'postgres'
 
+  }
 }
 
-module.exports  = db_PostGre_Config
+module.exports = databaseConfig
