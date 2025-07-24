@@ -1,14 +1,20 @@
-import express from "express"
-import { config } from 'dotenv'
-import { run as db_connection } from "./src/utils/helper"
-import { routers } from "./src/routers"
-config()
-db_connection()
+import express from "express";
+import { config } from 'dotenv';
+
+config();
+
 const app = express()
 app.use(express.json())
 
 const port = parseInt(process.env.PORT as string) || 5500
-app.use(routers)
+app.use((req, res) => {
+    res.status(404).json({
+        error: "Not found",
+        sucess: false,
+        message: "not found"
+    });
+});
+
 app.listen(port, () => {
     console.log(`Our server is running, on port: localhost//${port}`)
 })

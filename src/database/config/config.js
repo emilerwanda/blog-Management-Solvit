@@ -8,9 +8,15 @@ const getPrefix = () => {
   return env
 }
 
-const databaseConfig = () => {
+const databaseConfig = async () => {
   const env = getPrefix();
   console.log(process.env[`${env}_USERNAME`])
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
   return {
     username: process.env[`${env}_USERNAME`] || '',
     database: process.env[`${env}_DATABASE`] || '',
@@ -18,7 +24,6 @@ const databaseConfig = () => {
     host: process.env[`${env}_HOST`] || '',
     port: process.env[`${env}_PORT`] || 5432,
     dialect: 'postgres'
-
   }
 }
 
