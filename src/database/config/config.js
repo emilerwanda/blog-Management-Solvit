@@ -1,5 +1,6 @@
 const dotenv = require('dotenv')
 dotenv.config()
+
 const getPrefix = () => {
   var env = process.env.NODE_ENV;
   if (!env) {

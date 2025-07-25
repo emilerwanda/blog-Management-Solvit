@@ -4,9 +4,10 @@ interface UserAttribute {
     id: string,
     name: string,
     email: string,
-    gender: 'male' | 'female' | 'other'
-    role: string
-    password: string
+    password?: string, // Optional for Google users
+    googleId?: string, // For Google users
+    photo?: string,    // For Google users
+    role: string,
     createdAt?: Date,
     updatedAt?: Date,
     deletedAt?: null
@@ -21,9 +22,10 @@ export interface UserCreationAttribute extends Omit<UserAttribute, 'id'> {
 export class User extends Model<UserAttribute, UserCreationAttribute> implements UserAttribute {
     public id!: string;
     public email!: string;
-    public password!: string;
+    public password?: string;
+    public googleId?: string;
+    public photo?: string;
     public role!: string;
-    public gender!: "male" | "female" | "other";
     public updatedAt!: Date;
     public deletedAt: null = null;
     public createdAt: Date = new Date;
@@ -37,12 +39,10 @@ export class User extends Model<UserAttribute, UserCreationAttribute> implements
             foreignKey: 'author',
             as: 'blogs'
         });
-        
         User.hasMany(models.Comment, {
             foreignKey: 'author',
             as: 'comments'
         });
-        
         User.hasMany(models.Like, {
             foreignKey: 'user',
             as: 'likes'
@@ -54,7 +54,8 @@ export class User extends Model<UserAttribute, UserCreationAttribute> implements
             name: this.name,
             email: this.email,
             password: this.password,
-            gender: this.gender,
+            googleId: this.googleId,
+            photo: this.photo,
             role: this.role,
             updatedAt: this.updatedAt,
             createdAt: this.createdAt
@@ -80,14 +81,19 @@ export const UserModal = (sequelize: Sequelize) => {
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true // Optional for Google users
+        },
+        googleId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true
+        },
+        photo: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         role: {
             type: DataTypes.STRING,
-            allowNull: false
-        },
-        gender: {
-            type: DataTypes.ENUM('male', 'female', 'other'),
             allowNull: false
         },
     }, {

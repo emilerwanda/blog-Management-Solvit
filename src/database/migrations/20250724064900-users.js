@@ -2,12 +2,14 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    await queryInterface.sequelize.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
+
     await queryInterface.createTable('users', {
       id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
       },
       name: {
         type: Sequelize.STRING,
@@ -20,32 +22,40 @@ module.exports = {
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
+      },
+      googleId: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        unique: true,
+      },
+      photo: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       role: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      gender: {
-        type: Sequelize.ENUM('male', 'female', 'other'),
-        allowNull: false,
-      },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       deletedAt: {
-        allowNull: true,
         type: Sequelize.DATE,
-      },
+        allowNull: true,
+      }
     });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('users');
-  },
+    await queryInterface.sequelize.query('DROP EXTENSION IF EXISTS "uuid-ossp";');
+  }
 };
