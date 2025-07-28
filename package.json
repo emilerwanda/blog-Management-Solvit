@@ -37,34 +37,42 @@
     "seed:create": "sequelize-cli seed:generate --name"
   },
   "devDependencies": {
-    "@types/express": "^5.0.3",
-    "@types/node": "^24.0.15",
-    "@types/sequelize": "^4.28.20",
-    "@types/uuid": "^10.0.0",
+    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/express-session": "^1.17.10",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.0.15",
     "@types/passport": "^1.0.16",
     "@types/passport-google-oauth20": "^2.0.14",
-    "nodemon": "^3.0.2",
+    "@types/sequelize": "^4.28.20",
+    "@types/uuid": "^10.0.0",
     "babel-register": "^6.26.0",
+    "nodemon": "^3.0.2",
     "sequelize-cli": "^6.6.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.7.0",
+    "connect-session-sequelize": "^8.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "express-session": "^1.17.3",
+    "helmet": "^7.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.10",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
     "ts-node-dev": "^2.0.0",
     "uuid": "^11.1.0",
-    "cors": "^2.8.5",
-    "express-session": "^1.17.3",
-    "helmet": "^7.1.0",
-    "passport": "^0.6.0",
-    "passport-google-oauth20": "^2.0.0"
-
+    "zod": "^4.0.5"
   }
 }

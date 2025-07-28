@@ -11,10 +11,14 @@ import cors from 'cors';
 config();
 
 const app = express();
-const port = parseInt(process.env.PORT as string) || 5500
 
 app.use(helmet());
-app.use(cors());
+
+app.use(cors({
+    origin: "http://localhost:5500",
+    credentials: true
+}));
+
 app.use(express.json());
 
 
@@ -45,6 +49,8 @@ app.use((req: Request, res: Response) => {
         message: "not found"
     });
 });
+
+const port = parseInt(process.env.PORT as string) || 5500
 
 app.listen(port, () => {
     console.log(`Our server is running at localhost//${port}`)

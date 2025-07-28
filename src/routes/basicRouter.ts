@@ -13,7 +13,6 @@ BasicRouters.get('/dashboard', isAuthenticated, (req, res) => {
     sucess: true,
     user: req.user
   })
-  res.send(`Welcome to the dashboard, ${req.user ? (req.user as any).name : 'user'}!`);
 });
 
 BasicRouters.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
