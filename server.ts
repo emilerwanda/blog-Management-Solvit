@@ -5,6 +5,10 @@ import { config } from 'dotenv';
 import './src/midlewares/passportMiddleware';
 import { authRouters } from './src/routes/authRouter';
 import { BasicRouters } from './src/routes/basicRouter';
+import { userRouter } from './src/routes/userRouter';
+import { blogRouter } from './src/routes/blogRouter';
+import { commentRouter } from './src/routes/commentRouter';
+import { likeRouter } from './src/routes/likeRouter';
 import helmet from 'helmet';
 import cors from 'cors';
 
@@ -35,6 +39,10 @@ app.use(passport.session());
 
 app.use('/', BasicRouters);
 app.use('/', authRouters);
+app.use('/', userRouter);
+app.use('/', blogRouter);
+app.use('/', commentRouter);
+app.use('/', likeRouter);
 
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -52,8 +60,13 @@ app.use((req: Request, res: Response) => {
 
 const port = parseInt(process.env.PORT as string) || 5500
 
-app.listen(port, () => {
-    console.log(`Our server is running at localhost//${port}`)
-})
+// Only start the server if this file is executed directly (not imported)
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Our server is running at localhost//${port}`)
+    })
+}
+
+export { app }
 
 

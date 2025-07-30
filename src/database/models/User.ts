@@ -4,7 +4,9 @@ interface UserAttribute {
     id: string,
     name: string,
     email: string,
-    password?: string, // Optional for Google users
+    password?: string, 
+    gender: 'male' | 'female' | 'other'
+    // Optional for Google users
     googleId?: string, // For Google users
     photo?: string,    // For Google users
     role: string,
@@ -14,6 +16,7 @@ interface UserAttribute {
     blogs?: any[];
     comments?: any[];
     likes?: any[];
+    
 }
 export interface UserCreationAttribute extends Omit<UserAttribute, 'id'> {
     id?: string
@@ -24,6 +27,7 @@ export class User extends Model<UserAttribute, UserCreationAttribute> implements
     public email!: string;
     public password?: string;
     public googleId?: string;
+    public gender!: "male" | "female" | "other";
     public photo?: string;
     public role!: string;
     public updatedAt!: Date;
@@ -54,6 +58,7 @@ export class User extends Model<UserAttribute, UserCreationAttribute> implements
             name: this.name,
             email: this.email,
             password: this.password,
+            gender: this.gender,
             googleId: this.googleId,
             photo: this.photo,
             role: this.role,
@@ -94,6 +99,10 @@ export const UserModal = (sequelize: Sequelize) => {
         },
         role: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        gender: {
+            type: DataTypes.ENUM('male', 'female', 'other'),
             allowNull: false
         },
     }, {

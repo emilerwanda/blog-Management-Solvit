@@ -3,7 +3,7 @@ import { Sequelize, Model, DataTypes } from "sequelize";
 interface BlogAttribute {
     id: string;
     title: string;
-    slug: string;
+    slug?: string;
     description?: string;
     content: string;
     blog_image_url?: string;
@@ -24,7 +24,7 @@ export interface BlogCreationAttribute extends Omit<BlogAttribute, 'id'> {
 export class Blog extends Model<BlogAttribute, BlogCreationAttribute> implements BlogAttribute {
     public id!: string;
     public title!: string;
-    public slug!: string;
+    public slug?: string;
     public description?: string;
     public content!: string;
     public blog_image_url?: string;

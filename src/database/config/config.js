@@ -1,8 +1,8 @@
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 dotenv.config()
 
 const getPrefix = () => {
-  var env = process.env.NODE_ENV;
+  var env = process.env.ENV || process.env.NODE_ENV;
   if (!env) {
     return env = 'DEV'
   }
@@ -11,18 +11,11 @@ const getPrefix = () => {
 
 const databaseConfig = async () => {
   const env = getPrefix();
-  console.log(process.env[`${env}_USERNAME`])
-  try {
-    await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
   return {
-    username: process.env[`${env}_USERNAME`] || '',
-    database: process.env[`${env}_DATABASE`] || '',
-    password: process.env[`${env}_PASSWORD`] || '',
-    host: process.env[`${env}_HOST`] || '',
+    username: process.env[`${env}_USERNAME`] || 'postgres',
+    database: process.env[`${env}_DATABASE`] || 'blog_solvit',
+    password: process.env[`${env}_PASSWORD`] || '123',
+    host: process.env[`${env}_HOST`] || 'localhost',
     port: process.env[`${env}_PORT`] || 5432,
     dialect: 'postgres'
   }
