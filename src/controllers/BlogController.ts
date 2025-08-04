@@ -3,7 +3,7 @@ import { Blog } from "../database/models/Blog";
 import { User } from "../database/models/User";
 import { AddBlogSchema, UpdateBlogSchema } from "../schemas/blogShema";
 import { Subscriber } from "../database/models/Subscriber";
-import { sendNewBlogNotification } from "../utils/emailService";
+import { queueNewBlogNotification } from "../utils/emailService";
 
 export class BlogController {
   // Create blog
@@ -68,11 +68,11 @@ export class BlogController {
   private static async sendNotificationsToSubscribers(blog: Blog, author: User) {
     try {
       // Get all active subscribers
-      const subscribers = await Subscriber.findAll({ where: { isActive: true } });
+      const subscribers = await Subscriber.findAll({ where: { isSubscribed: true } });
       
       // Send notification to each subscriber
       const notificationPromises = subscribers.map(subscriber => 
-        sendNewBlogNotification(blog, author, subscriber.email)
+        queueNewBlogNotification(blog, author, subscriber.email)
       );
       
       // Wait for all notifications to be sent

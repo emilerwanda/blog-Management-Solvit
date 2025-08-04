@@ -5,7 +5,8 @@ import { isAuthenticated } from "../midlewares/authUserMiddleware";
 const likeRouter = Router();
 
 likeRouter.post('/likes', isAuthenticated, LikeController.createLike);
-likeRouter.get('/likes/blog/:blogId', LikeController.getLikesByBlogId);
+likeRouter.get('/blogs/:blogId/likes', LikeController.getLikesByBlogId);
+
 
 // Add other like routes here
 

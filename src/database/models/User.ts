@@ -6,7 +6,6 @@ interface UserAttribute {
     email: string,
     password?: string, 
     gender: 'male' | 'female' | 'other'
-    // Optional for Google users
     googleId?: string, // For Google users
     photo?: string,    // For Google users
     role: string,

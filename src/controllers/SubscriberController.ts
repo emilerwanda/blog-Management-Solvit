@@ -1,10 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { Subscriber } from "../database/models/Subscriber";
+import { AllModal } from "../database/models/index";
 import { SubscribeSchema, UnsubscribeSchema } from "../schemas/subscriberSchema";
-import { sendSubscriptionConfirmation } from "../utils/emailService";
+import { queueSubscriptionConfirmation } from "../utils/emailService";
+import { sequelize } from "../database/config/sequelize";
+
+const { subscriber: Subscriber} = AllModal(sequelize);
 
 export class SubscriberController {
-  // Subscribe to newsletter
+  
   public static async subscribe(req: Request, res: Response, next: NextFunction) {
     try {
       const { error, value } = SubscribeSchema.validate(req.body);
@@ -15,23 +18,23 @@ export class SubscriberController {
         });
       }
 
-      const { email, name } = value;
+      const { email } = value;
 
-      // Check if already subscribed
+     
       const existingSubscriber = await Subscriber.findOne({ where: { email } });
       if (existingSubscriber) {
-        if (existingSubscriber.isActive) {
+        if (existingSubscriber.isSubscribed) {
           return res.status(400).json({
             success: false,
             message: 'This email is already subscribed'
           });
         } else {
-          // Reactivate subscription
-          existingSubscriber.isActive = true;
+         
+          existingSubscriber.isSubscribed = true;
           await existingSubscriber.save();
           
           // Send confirmation email
-          await sendSubscriptionConfirmation(email, name);
+          await queueSubscriptionConfirmation(email);
           
           return res.status(200).json({
             success: true,
@@ -44,12 +47,11 @@ export class SubscriberController {
       // Create new subscriber
       const subscriber = await Subscriber.create({
         email,
-        name,
-        isActive: true
+        isSubscribed: true
       });
 
       // Send confirmation email
-      await sendSubscriptionConfirmation(email, name);
+      await queueSubscriptionConfirmation(email);
 
       return res.status(201).json({
         success: true,
@@ -88,7 +90,7 @@ export class SubscriberController {
 
       // Find subscriber
       const subscriber = await Subscriber.findOne({ where: { email } });
-      if (!subscriber || !subscriber.isActive) {
+      if (!subscriber || !subscriber.isSubscribed) {
         return res.status(404).json({
           success: false,
           message: 'Subscription not found or already inactive'
@@ -96,7 +98,7 @@ export class SubscriberController {
       }
 
       // Deactivate subscription (soft delete)
-      subscriber.isActive = false;
+      subscriber.isSubscribed = false;
       await subscriber.save();
 
       return res.status(200).json({
@@ -116,7 +118,7 @@ export class SubscriberController {
   public static async getAllSubscribers(req: Request, res: Response, next: NextFunction) {
     try {
       const subscribers = await Subscriber.findAll({
-        where: { isActive: true },
+        where: { isSubscribed: true },
         order: [['createdAt', 'DESC']]
       });
 

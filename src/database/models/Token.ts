@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
-import { sequelize } from '../config/sequelize';
+
 
 interface TokenAttributes {
   id: string;
@@ -12,7 +12,7 @@ interface TokenAttributes {
   updatedAt?: Date;
 }
 
-// Optional `id` for creation
+
 type TokenCreationAttributes = Optional<TokenAttributes, 'id' | 'blacklisted'>;
 
 export class Token extends Model<TokenAttributes, TokenCreationAttributes> implements TokenAttributes {

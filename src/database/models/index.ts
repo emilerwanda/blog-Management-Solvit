@@ -11,7 +11,7 @@ interface Modals {
   User: ReturnType<typeof UserModal>,
   like: ReturnType<typeof LikeModel>,
   comment: ReturnType<typeof CommentModel>,
-  subscribe: ReturnType<typeof SubscriberModel>,
+  subscriber: ReturnType<typeof SubscriberModel>,
   token: ReturnType<typeof TokenModel>
 }
 export const AllModal = (sequelize: Sequelize): Modals => {
@@ -20,7 +20,7 @@ export const AllModal = (sequelize: Sequelize): Modals => {
     like: LikeModel(sequelize),
     comment: CommentModel(sequelize),
     Blog: BlogModel(sequelize),
-    subscribe: SubscriberModel(sequelize),
+    subscriber: SubscriberModel(sequelize),
     token: TokenModel(sequelize),
   }
 }

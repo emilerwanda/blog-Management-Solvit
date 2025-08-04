@@ -6,37 +6,46 @@ import { config } from 'dotenv';
 
 config();
 
-// Connect to Redis (optional)
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
 
-// Define queue names
 const EMAIL_NOTIFICATION_QUEUE = 'email:notifications';
 const SUBSCRIPTION_CONFIRMATION_QUEUE = 'email:subscriptions';
 
-// Create transporter from .env SMTP config
+// Nodemailer transporter
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true', // true for port 465, false for 587
+  secure: process.env.SMTP_SECURE === 'true',
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
 });
 
-// ----------------------
-// Send Subscription Confirmation
-// ----------------------
-export const sendSubscriptionConfirmation = async (email: string, name?: string) => {
-  if (process.env.USE_REDIS === 'true') {
-    await redis.rpush(
-      SUBSCRIPTION_CONFIRMATION_QUEUE,
-      JSON.stringify({ email, name })
-    );
-    console.log(`Queued subscription confirmation for ${email}`);
-    return { queued: true };
-  }
+/**
+ * Queues a subscription confirmation email job
+ */
+export const queueSubscriptionConfirmation = async (email: string, name?: string) => {
+  await redis.rpush(SUBSCRIPTION_CONFIRMATION_QUEUE, JSON.stringify({ email, name }));
+  console.log(`Queued subscription confirmation for ${email}`);
+};
 
+/**
+ * Queues a new blog notification job
+ */
+export const queueNewBlogNotification = async (blog: Blog, author: User, subscriberEmail: string) => {
+  await redis.rpush(EMAIL_NOTIFICATION_QUEUE, JSON.stringify({
+    blog,
+    author,
+    subscriberEmail
+  }));
+  console.log(`Queued blog notification for ${subscriberEmail}`);
+};
+
+/**
+ * Sends subscription confirmation email immediately
+ */
+export const sendSubscriptionConfirmationDirect = async (email: string, name?: string) => {
   const mailOptions = {
     from: `"Blog Platform" <${process.env.SMTP_USER}>`,
     to: email,
@@ -54,26 +63,12 @@ export const sendSubscriptionConfirmation = async (email: string, name?: string)
 
   const info = await transporter.sendMail(mailOptions);
   console.log(`Subscription confirmation email sent to ${email} (ID: ${info.messageId})`);
-  return info;
 };
 
-// ----------------------
-// Send New Blog Notification
-// ----------------------
-export const sendNewBlogNotification = async (
-  blog: Blog,
-  author: User,
-  subscriberEmail: string
-) => {
-  if (process.env.USE_REDIS === 'true') {
-    await redis.rpush(
-      EMAIL_NOTIFICATION_QUEUE,
-      JSON.stringify({ blog, author, subscriberEmail })
-    );
-    console.log(`Queued blog notification for ${subscriberEmail}`);
-    return { queued: true };
-  }
-
+/**
+ * Sends blog notification email immediately
+ */
+export const sendNewBlogNotificationDirect = async (blog: Blog, author: User, subscriberEmail: string) => {
   const mailOptions = {
     from: `"Blog Platform" <${process.env.SMTP_USER}>`,
     to: subscriberEmail,
@@ -91,5 +86,4 @@ export const sendNewBlogNotification = async (
 
   const info = await transporter.sendMail(mailOptions);
   console.log(`Blog notification email sent to ${subscriberEmail} (ID: ${info.messageId})`);
-  return info;
 };

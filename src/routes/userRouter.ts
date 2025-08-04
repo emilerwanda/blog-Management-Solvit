@@ -4,7 +4,7 @@ import { UserController } from "../controllers/UserController";
 const userRouter = Router();
 
 userRouter.post('/users', UserController.createUser);
-userRouter.post('/login', UserController.loginUser);
+userRouter.post('/auth/login', UserController.loginUser);
 
 // Add other user routes here
 

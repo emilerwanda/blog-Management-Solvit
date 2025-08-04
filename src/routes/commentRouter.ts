@@ -5,8 +5,9 @@ import { isAuthenticated } from "../midlewares/authUserMiddleware";
 const commentRouter = Router();
 
 commentRouter.post('/comments', isAuthenticated, CommentController.createComment);
-commentRouter.get('/comments/blog/:blogId', CommentController.getCommentsByBlogId);
+commentRouter.get('/blogs/:blogId/comments', CommentController.getCommentsByBlogId);
 commentRouter.get('/comments/:id', CommentController.getCommentById);
+
 
 // Add other comment routes here
 

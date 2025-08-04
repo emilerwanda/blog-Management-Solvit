@@ -3,8 +3,7 @@ import { Sequelize, Model, DataTypes } from "sequelize";
 interface SubscriberAttribute {
     id: string;
     email: string;
-    name?: string;
-    isActive: boolean;
+    isSubscribed: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -16,8 +15,7 @@ export interface SubscriberCreationAttribute extends Omit<SubscriberAttribute, '
 export class Subscriber extends Model<SubscriberAttribute, SubscriberCreationAttribute> implements SubscriberAttribute {
     public id!: string;
     public email!: string;
-    public name?: string;
-    public isActive!: boolean;
+    public isSubscribed!: boolean;
     public createdAt!: Date;
     public updatedAt!: Date;
 
@@ -25,8 +23,7 @@ export class Subscriber extends Model<SubscriberAttribute, SubscriberCreationAtt
         return {
             id: this.id,
             email: this.email,
-            name: this.name,
-            isActive: this.isActive,
+            isSubscribed: this.isSubscribed,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt
         };
@@ -48,11 +45,7 @@ export const SubscriberModel = (sequelize: Sequelize) => {
                 isEmail: true
             }
         },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        isActive: {
+        isSubscribed: {
             type: DataTypes.BOOLEAN,
             defaultValue: true
         }

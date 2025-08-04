@@ -13,11 +13,7 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-      isActive: {
+      isSubscribed: {
         type: Sequelize.BOOLEAN,
         defaultValue: true
       },

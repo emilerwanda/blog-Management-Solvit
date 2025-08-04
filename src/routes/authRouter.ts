@@ -6,6 +6,6 @@ const authRouters = Router();
 
 authRouters.get('/auth/google', AuthController.googleLogin);
 authRouters.get('/auth/google/callback', AuthController.googleCallback, generateOAuthToken, handleOAuthCallback);
-authRouters.get('/logout', AuthController.logout);
+authRouters.get('/auth/logout', AuthController.logout);
 
 export { authRouters };
