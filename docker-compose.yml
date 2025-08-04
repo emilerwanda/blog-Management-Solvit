@@ -1,0 +1,63 @@
+services:
+  # API Server
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5500:5500"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - NODE_ENV=development
+      - PORT=5500
+      - DEV_USERNAME=postgres
+      - DEV_PASSWORD=postgres
+      - DEV_DATABASE=blog_solvit
+      - DEV_HOST=postgres
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=blog_solvit
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Redis for Message Queue
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # Email Worker
+  email_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    depends_on:
+      - api
+      - redis
+    environment:
+      - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: node dist/utils/emailWorker.ts
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -6,6 +6,7 @@ import { sequelize } from '../src/database/config/sequelize'
 import { AllModal } from '../src/database/models/index'
 import bcrypt from 'bcrypt'
 
+
 const request = supertest(app)
 export const userResponse = {
     token: ''

@@ -1,4 +1,4 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { sequelize } from '../config/sequelize';
 
 interface TokenAttributes {
@@ -25,7 +25,7 @@ export class Token extends Model<TokenAttributes, TokenCreationAttributes> imple
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
-
+export const TokenModel = (sequelize: Sequelize) => {
 Token.init(
   {
     id: {
@@ -59,7 +59,8 @@ Token.init(
     sequelize,
     modelName: 'Token',
     tableName: 'tokens',
-    timestamps: true, // enables createdAt and updatedAt
-    underscored: false, // change to true if you prefer snake_case columns
-  }
-);
+    timestamps: true,
+    underscored: false, 
+  })
+  return Token
+};

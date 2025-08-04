@@ -7,7 +7,7 @@ const request = supertest(app)
 
 describe('create A user', () => {
     describe('Starting from 400', () => {
-        it('having an unexcepted columbn', async () => {
+        it('having an unexcepted column', async () => {
             const res = await request.post(`/users`)
                 .send({
                     email: 'ryan.fab@outlook.com',

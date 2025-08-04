@@ -9,6 +9,10 @@ import { userRouter } from './src/routes/userRouter';
 import { blogRouter } from './src/routes/blogRouter';
 import { commentRouter } from './src/routes/commentRouter';
 import { likeRouter } from './src/routes/likeRouter';
+import { newsletterRouter } from './src/routes/newsletterRouter';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './src/SwaggerDoc/swagger';
+
 import helmet from 'helmet';
 import cors from 'cors';
 
@@ -36,6 +40,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
 
 app.use('/', BasicRouters);
 app.use('/', authRouters);
@@ -43,6 +50,7 @@ app.use('/', userRouter);
 app.use('/', blogRouter);
 app.use('/', commentRouter);
 app.use('/', likeRouter);
+app.use('/', newsletterRouter); // Add this line
 
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
