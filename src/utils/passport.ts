@@ -26,6 +26,7 @@ passport.use(new GoogleStrategy({
           email,
           photo: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : '',
           role: 'normal',
+          gender: 'other'
         });
       }
       done(null, user);

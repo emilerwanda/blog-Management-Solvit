@@ -10,10 +10,10 @@ services:
       - postgres
       - redis
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=DEV
       - PORT=5500
       - DEV_USERNAME=postgres
-      - DEV_PASSWORD=postgres
+      - DEV_PASSWORD=123
       - DEV_DATABASE=blog_solvit
       - DEV_HOST=postgres
       - REDIS_URL=redis://redis:6379
@@ -29,7 +29,7 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=123
       - POSTGRES_DB=blog_solvit
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -56,7 +56,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: node dist/utils/emailWorker.ts
+    command: npx ts-node src/utils/emailWorker.ts
 
 volumes:
   postgres_data:

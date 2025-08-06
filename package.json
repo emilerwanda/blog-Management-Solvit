@@ -76,6 +76,7 @@
   "dependencies": {
     "@types/ioredis": "^4.28.10",
     "bcrypt": "^6.0.0",
+    "bull": "^4.16.5",
     "cloudinary": "^2.7.0",
     "connect-session-sequelize": "^8.0.2",
     "cors": "^2.8.5",

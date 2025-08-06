@@ -4,6 +4,7 @@ import { User } from "../database/models/User";
 import { AddBlogSchema, UpdateBlogSchema } from "../schemas/blogShema";
 import { Subscriber } from "../database/models/Subscriber";
 import { queueNewBlogNotification } from "../utils/emailService";
+// import { sendNewBlogNotificationDirect } from "../utils/emailService";
 
 export class BlogController {
   // Create blog

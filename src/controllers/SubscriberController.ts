@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { AllModal } from "../database/models/index";
 import { SubscribeSchema, UnsubscribeSchema } from "../schemas/subscriberSchema";
 import { queueSubscriptionConfirmation } from "../utils/emailService";
+// import { sendSubscriptionConfirmationDirect } from "../utils/emailService";
 import { sequelize } from "../database/config/sequelize";
 
 const { subscriber: Subscriber} = AllModal(sequelize);

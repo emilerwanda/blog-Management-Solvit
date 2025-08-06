@@ -1,15 +1,14 @@
 import nodemailer from 'nodemailer';
 import { Blog } from '../database/models/Blog';
 import { User } from '../database/models/User';
-import Redis from 'ioredis';
+import Queue from 'bull';
 import { config } from 'dotenv';
 
 config();
 
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
-
-const EMAIL_NOTIFICATION_QUEUE = 'email:notifications';
-const SUBSCRIPTION_CONFIRMATION_QUEUE = 'email:subscriptions';
+// Initialize Bull queues
+const emailQueue = new Queue('email:notifications', process.env.REDIS_URL || 'redis://localhost:6379');
+const subscriptionQueue = new Queue('email:subscriptions', process.env.REDIS_URL || 'redis://localhost:6379');
 
 // Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -25,34 +24,30 @@ const transporter = nodemailer.createTransport({
 /**
  * Queues a subscription confirmation email job
  */
-export const queueSubscriptionConfirmation = async (email: string, name?: string) => {
-  await redis.rpush(SUBSCRIPTION_CONFIRMATION_QUEUE, JSON.stringify({ email, name }));
+export const queueSubscriptionConfirmation = async (email: string) => {
+  await subscriptionQueue.add({ email });
   console.log(`Queued subscription confirmation for ${email}`);
 };
 
 /**
- * Queues a new blog notification job
+ * Queues a new blog notification email job
  */
 export const queueNewBlogNotification = async (blog: Blog, author: User, subscriberEmail: string) => {
-  await redis.rpush(EMAIL_NOTIFICATION_QUEUE, JSON.stringify({
-    blog,
-    author,
-    subscriberEmail
-  }));
+  await emailQueue.add({ blog, author, subscriberEmail });
   console.log(`Queued blog notification for ${subscriberEmail}`);
 };
 
 /**
  * Sends subscription confirmation email immediately
  */
-export const sendSubscriptionConfirmationDirect = async (email: string, name?: string) => {
+export const sendSubscriptionConfirmationDirect = async (email: string) => {
   const mailOptions = {
     from: `"Blog Platform" <${process.env.SMTP_USER}>`,
     to: email,
     subject: 'Subscription Confirmation',
     html: `
       <h1>Subscription Confirmed!</h1>
-      <p>Hello ${name || 'there'},</p>
+      <p>Hello there,</p>
       <p>Thank you for subscribing to our newsletter. You will now receive updates whenever new content is published.</p>
       <p>If you did not request this subscription, please click 
         <a href="http://localhost:5500/newsletter/unsubscribe?email=${email}">here</a> 

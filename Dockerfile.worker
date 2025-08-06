@@ -10,4 +10,4 @@ COPY . .
 
 RUN npm run build
 
-CMD ["node", "dist/utils/emailWorker.ts"]
+CMD ["npx", "ts-node", "src/utils/emailWorker.ts"]
